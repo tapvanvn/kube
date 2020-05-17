@@ -4,10 +4,11 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source $DIR/version.sh
 
 function setHelmVersion {
-
+    err=0
     if [ "$#" -ne 2 ]; then
         echo "Illegal number of parameters"
         echo "format: setHelmVersion version helm_chart_dir"
+        err=1
     fi
 
     version=$1
@@ -19,14 +20,16 @@ function setHelmVersion {
         sed -i ".bak" -e "s/^appVersion: .*$/appVersion: $version/;t" $chart_file && rm -f $char_file.bak
     else
         echo "chart directory is not existed"
+        err=1
     fi
 }
 
 function nextHelmVersionWithFile {
-
+    err=0
     if [ "$#" -ne 3 ]; then
         echo "Illegal number of parameters"
         echo "format: nextHelmVersionWithFile version_file helm_chart_dir update_level"
+        err=1
     fi
 
     version_file=$1
@@ -42,9 +45,11 @@ function nextHelmVersionWithFile {
             setHelmVersion $new_version $chart_dir
         else 
             echo "helm chart dir is not existed"
+            err=1
         fi
 
     else 
         echo "version file is not existed"
+        err=1
     fi
 }
