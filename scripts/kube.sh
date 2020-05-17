@@ -1,3 +1,7 @@
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $DIR/helm.sh
+
 alias kube='kubectl'
 
 kubeallpods() {
@@ -35,5 +39,21 @@ kubesh() {
             query="app=$query"
         fi
         kubectl exec -it $(kubectl get pods --all-namespaces -l $query -o name | head -1) -- sh
+    fi
+}
+
+kubelogs() {
+    local arg_num=${#}
+    if [ $arg_num -gt 0 ]; then
+        query=$1
+        if ! [ "$query" != "${query/=/}" ]; then
+            query="app=$query"
+        fi
+        for p in $(kubectl get pods --all-namespaces -l $query -o custom-columns=NAME:.metadata.name); do
+            if [ "$p" != "${p/$1/}" ]; then
+                echo "--$p"
+                kubectl logs $p
+            fi
+        done
     fi
 }

@@ -4,6 +4,7 @@ sure_root(){
         mkdir -p "$HOME/.newcontinent-team.com"
     fi
 }
+
 sure_root_script(){
     if ! [ -f "$HOME/.newcontinent-team.com/main.sh" ]; then 
         touch "$HOME/.newcontinent-team.com/main.sh"
